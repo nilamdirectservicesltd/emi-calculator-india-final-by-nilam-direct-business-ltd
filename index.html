@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced EMI Calculator | Nilam Direct Business Ltd</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #424874;
+            --primary-light: #6c75b0;
+            --secondary: #A6B1E1;
+            --light: #F4EEFF;
+            --accent: #DCD6F7;
+            --shadow: 0 10px 30px rgba(66, 72, 116, 0.12);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9f9ff;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgZmlsbD0idXJsKCNwYXR0ZXJuKSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIvPjwvc3ZnPg==');
+            opacity: 0.3;
+        }
+        
+        .header h1 {
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header p {
+            font-weight: 300;
+            opacity: 0.9;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .calculator-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            flex: 1;
+        }
+        
+        .calculator-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+            margin-bottom: 2rem;
+        }
+        
+        .calculator-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(66, 72, 116, 0.15);
+        }
+        
+        .calculator-header {
+            background: var(--primary);
+            color: white;
+            padding: 1.5rem;
+            font-weight: 600;
+            font-size: 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .calculator-header .btn-refresh {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .calculator-header .btn-refresh:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(180deg);
+        }
+        
+        .calculator-body {
+            padding: 2rem;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .form-label .info-icon {
+            margin-left: 8px;
+            color: var(--secondary);
+            cursor: help;
+            font-size: 0.9rem;
+        }
+        
+        .form-control {
+            height: 50px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 0.25rem rgba(166, 177, 225, 0.25);
+        }
+        
+        .input-group-text {
+            background-color: var(--accent);
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .btn-calculate {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            border-radius: 8px;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+            width: 100%;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-calculate:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(66, 72, 116, 0.3);
+        }
+        
+        .btn-calculate:active {
+            transform: translateY(0);
+        }
+        
+        .btn-reset {
+            background: var(--light);
+            color: var(--primary);
+            border: 2px solid var(--secondary);
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            width: 100%;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-reset:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(166, 177, 225, 0.3);
+        }
+        
+        .results-container {
+            display: none;
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        .result-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: var(--transition);
+            border-left: 4px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .result-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .result-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            transition: var(--transition);
+        }
+        
+        .result-card:hover::after {
+            width: 6px;
+        }
+        
+        .result-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .result-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            transition: var(--transition);
+        }
+        
+        .chart-container:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .chart-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .chart-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .chart-btn {
+            background: var(--accent);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .chart-btn:hover {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .footer {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: auto;
+            font-size: 0.9rem;
+        }
+        
+        .footer p {
+            margin-bottom: 0;
+            opacity: 0.8;
+        }
+        
+        .footer a {
+            color: var(--secondary);
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .footer a:hover {
+            opacity: 0.8;
+        }
+        
+        /* Tooltip styles */
+        .tooltip-inner {
+            background-color: var(--primary);
+            padding: 8px 12px;
+            font-size: 0.85rem;
+        }
+        
+        .bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before, 
+        .bs-tooltip-top .tooltip-arrow::before {
+            border-top-color: var(--primary);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .calculator-body {
+                padding: 1.5rem;
+            }
+            
+            .result-value {
+                font-size: 1.5rem;
+            }
+            
+            .chart-actions {
+                justify-content: center;
+            }
+        }
+        
+        /* Custom animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .animate-delay-1 {
+            animation-delay: 0.1s;
+        }
+        
+        .animate-delay-2 {
+            animation-delay: 0.2s;
+        }
+        
+        .rotate-animation {
+            animation: rotate 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <header class="header animate__animated animate__fadeInDown">
+        <div class="container">
+            <h1>Advanced EMI Calculator</h1>
+            <p>Calculate your monthly payments with precision and plan your finances better</p>
+        </div>
+    </header>
+
+    <div class="calculator-container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="calculator-card animate__animated animate__fadeInLeft">
+                    <div class="calculator-header">
+                        <span>Loan Details</span>
+                        <button class="btn-refresh" id="resetForm" title="Reset Form">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <div class="calculator-body">
+                        <form id="emiForm">
+                            <div class="mb-3 animate__animated animate__fadeIn">
+                                <label for="loanAmount" class="form-label">
+                                    Loan Amount (₹)
+                                    <i class="fas fa-info-circle info-icon" 
+                                       data-bs-toggle="tooltip" 
+                                       data-bs-placement="right" 
+                                       title="The total amount you wish to borrow"></i>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text">₹</span>
+                                    <input type="number" class="form-control" id="loanAmount" placeholder="e.g. 500000" required>
+                                </div>
+                            </div>
+                            <div class="mb-3 animate__animated animate__fadeIn animate-delay-1">
+                                <label for="tenure" class="form-label">
+                                    Loan Tenure (months)
+                                    <i class="fas fa-info-circle info-icon" 
+                                       data-bs-toggle="tooltip" 
+                                       data-bs-placement="right" 
+                                       title="Duration of the loan in months (e.g. 36 for 3 years)"></i>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                    <input type="number" class="form-control" id="tenure" placeholder="e.g. 36" required>
+                                </div>
+                            </div>
+                            <div class="mb-3 animate__animated animate__fadeIn animate-delay-2">
+                                <label for="interestRate" class="form-label">
+                                    Interest Rate (%)
+                                    <i class="fas fa-info-circle info-icon" 
+                                       data-bs-toggle="tooltip" 
+                                       data-bs-placement="right" 
+                                       title="Annual interest rate for the loan"></i>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text">%</span>
+                                    <input type="number" step="0.01" class="form-control" id="interestRate" placeholder="e.g. 8.5" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-calculate animate__animated animate__pulse animate__infinite">
+                                <i class="fas fa-calculator"></i> Calculate EMI
+                            </button>
+                            <button type="button" class="btn btn-reset" id="resetFormBtn">
+                                <i class="fas fa-undo"></i> Reset All
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div id="resultsSection" class="results-container">
+                    <div class="calculator-card animate__animated animate__fadeInRight">
+                        <div class="calculator-header">
+                            <span>EMI Summary</span>
+                            <button class="btn-refresh" id="refreshResults" title="Refresh Results">
+                                <i class="fas fa-redo"></i>
+                            </button>
+                        </div>
+                        <div class="calculator-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="result-card">
+                                        <div class="result-title">
+                                            <span>Monthly Payment</span>
+                                            <i class="fas fa-rupee-sign"></i>
+                                        </div>
+                                        <div id="emiAmount" class="result-value">₹0</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="result-card">
+                                        <div class="result-title">
+                                            <span>Total Interest</span>
+                                            <i class="fas fa-percentage"></i>
+                                        </div>
+                                        <div id="interestAmount" class="result-value">₹0</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="result-card">
+                                        <div class="result-title">
+                                            <span>Principal Amount</span>
+                                            <i class="fas fa-hand-holding-usd"></i>
+                                        </div>
+                                        <div id="principalAmount" class="result-value">₹0</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="result-card">
+                                        <div class="result-title">
+                                            <span>Total Payment</span>
+                                            <i class="fas fa-file-invoice-dollar"></i>
+                                        </div>
+                                        <div id="totalPayment" class="result-value">₹0</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container animate__animated animate__fadeInUp">
+                        <div class="chart-title">
+                            <i class="fas fa-chart-pie"></i>
+                            <span>Payment Breakdown</span>
+                        </div>
+                        <div class="chart-actions">
+                            <button class="chart-btn" id="exportChart" title="Export Chart">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="chart-btn" id="refreshChart" title="Refresh Chart">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                        <div id="chartContainer" style="height: 300px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer animate__animated animate__fadeInUp">
+        <div class="container">
+            <p>© <span id="currentYear"></span> Nilam Direct Business Ltd. All rights reserved.</p>
+            <p>Designed with <i class="fas fa-heart" style="color: #ff6b6b;"></i> for your financial planning needs</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    
+    <script>
+        // Initialize tooltips
+        $(document).ready(function(){
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+        
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        // Chart variable for global access
+        let chart;
+        
+        // Form submission handler
+        document.getElementById('emiForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            calculateEMI();
+        });
+        
+        // Reset form handler
+        document.getElementById('resetForm').addEventListener('click', resetForm);
+        document.getElementById('resetFormBtn').addEventListener('click', resetForm);
+        
+        // Refresh results handler
+        document.getElementById('refreshResults').addEventListener('click', calculateEMI);
+        
+        // Refresh chart handler
+        document.getElementById('refreshChart').addEventListener('click', function() {
+            const btn = this;
+            btn.innerHTML = '<i class="fas fa-sync-alt rotate-animation"></i>';
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-sync-alt"></i>';
+                if (chart) {
+                    chart.render();
+                    showToast('Chart refreshed successfully!');
+                }
+            }, 800);
+        });
+        
+        // Export chart handler (simulated)
+        document.getElementById('exportChart').addEventListener('click', function() {
+            showToast('Export feature would save chart as image in real implementation');
+        });
+        
+        // Main calculation function
+        function calculateEMI() {
+            // Show loading state
+            const btn = document.querySelector('#emiForm button[type="submit"]');
+            const originalBtnText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner rotate-animation"></i> Calculating...';
+            btn.classList.remove('animate__pulse');
+            
+            // Get form values
+            const loanAmount = parseFloat(document.getElementById('loanAmount').value);
+            const tenure = parseInt(document.getElementById('tenure').value);
+            const interestRate = parseFloat(document.getElementById('interestRate').value);
+            
+            // Validate inputs
+            if (isNaN(loanAmount)) {
+                showError('Please enter a valid loan amount');
+                resetButton(btn, originalBtnText);
+                return;
+            }
+            
+            if (isNaN(tenure)) {
+                showError('Please enter a valid tenure');
+                resetButton(btn, originalBtnText);
+                return;
+            }
+            
+            if (isNaN(interestRate)) {
+                showError('Please enter a valid interest rate');
+                resetButton(btn, originalBtnText);
+                return;
+            }
+            
+            // Simulate calculation delay for better UX
+            setTimeout(() => {
+                // Calculate EMI
+                const emi = calculateEMIValue(loanAmount, tenure, interestRate);
+                const totalPayment = emi * tenure;
+                const totalInterest = totalPayment - loanAmount;
+                
+                // Format currency
+                const formatCurrency = (amount) => {
+                    return '₹' + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                };
+                
+                // Update UI
+                document.getElementById('emiAmount').textContent = formatCurrency(emi);
+                document.getElementById('principalAmount').textContent = formatCurrency(loanAmount);
+                document.getElementById('interestAmount').textContent = formatCurrency(totalInterest);
+                document.getElementById('totalPayment').textContent = formatCurrency(totalPayment);
+                
+                // Show results section with animation
+                const resultsSection = document.getElementById('resultsSection');
+                resultsSection.style.display = 'block';
+                resultsSection.classList.add('animate__animated', 'animate__fadeIn');
+                
+                // Render chart
+                renderChart(loanAmount, totalInterest);
+                
+                // Reset button
+                resetButton(btn, originalBtnText);
+                
+                // Scroll to results
+                resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+                // Show success message
+                showToast('Calculation completed successfully!');
+            }, 800);
+        }
+        
+        // EMI calculation function
+        function calculateEMIValue(principal, tenureMonths, annualRate) {
+            const monthlyRate = annualRate / 12 / 100;
+            const emi = principal * monthlyRate * Math.pow(1 + monthlyRate, tenureMonths) / 
+                       (Math.pow(1 + monthlyRate, tenureMonths) - 1);
+            return emi;
+        }
+        
+        // Chart rendering function
+        function renderChart(principal, interest) {
+            chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                theme: "light2",
+                backgroundColor: "transparent",
+                title: {
+                    text: "",
+                    fontFamily: "Poppins",
+                    fontSize: 16,
+                    fontWeight: "normal"
+                },
+                data: [{
+                    type: "pie",
+                    indexLabel: "{label}: {y}",
+                    indexLabelFontFamily: "Poppins",
+                    indexLabelFontSize: 14,
+                    indexLabelFontWeight: "500",
+                    indexLabelPlacement: "inside",
+                    startAngle: -90,
+                    toolTipContent: "<b>{label}</b>: {y}",
+                    showInLegend: false,
+                    dataPoints: [
+                        { y: principal, label: "Principal", color: "#424874" },
+                        { y: interest, label: "Interest", color: "#A6B1E1" }
+                    ]
+                }]
+            });
+            chart.render();
+        }
+        
+        // Reset form function
+        function resetForm() {
+            document.getElementById('emiForm').reset();
+            document.getElementById('resultsSection').style.display = 'none';
+            showToast('Form has been reset');
+        }
+        
+        // Reset button to original state
+        function resetButton(btn, originalText) {
+            btn.innerHTML = originalText;
+            btn.classList.add('animate__pulse');
+        }
+        
+        // Show toast notification
+        function showToast(message) {
+            // In a real implementation, you would use a proper toast library
+            // Here we'll just simulate it with an alert for simplicity
+            alert(message);
+        }
+        
+        // Show error message
+        function showError(message) {
+            // In a real implementation, you would show this near the relevant field
+            alert("Error: " + message);
+        }
+        
+        // Input validation
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.value < 0) this.value = 0;
+            });
+        });
+    </script>
+</body>
+</html>
